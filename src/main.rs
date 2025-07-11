@@ -1,30 +1,18 @@
-use rand::random_range;
-use std::{cmp::Ordering, io};
+// mod guess;
+mod enums;
+mod ownership;
+mod structs;
+mod varmut;
+// use guess::guess;
+// use ownership::ownership;
+use enums::enums;
+use structs::strcuts;
+// use varmut::varmut;
 
 fn main() {
-    println!("Guess a number");
-    let secret = random_range(1..10);
-
-    loop {
-        let mut guess: String = String::new();
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Failed ot read line");
-
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue,
-        };
-
-        println!("Your guess is {} Secret was {}", guess, secret);
-
-        match guess.cmp(&secret) {
-            Ordering::Greater => println!("Guess is higher"),
-            Ordering::Equal => {
-                println!("Guess is equal");
-                break;
-            }
-            Ordering::Less => println!("Guess is lower"),
-        }
-    }
+    // ownership();
+    // guess();
+    // varmut();
+    // strcuts();
+    enums();
 }
