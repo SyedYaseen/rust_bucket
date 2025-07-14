@@ -51,7 +51,7 @@ fn plus_one(x: Option<u32>) -> Option<u32> {
     match x {
         Some(i) => Some(i + 1),
         None => None,
-    }
+    }                     
 }
 
 fn match_onecase() {

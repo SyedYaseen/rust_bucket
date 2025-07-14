@@ -5,6 +5,7 @@ mod modul;
 mod ownership;
 mod structs;
 mod errHandl;
+mod genric;
 // use guess::guess;
 // use ownership::ownership;
 // use enums::enums;
@@ -12,7 +13,8 @@ mod errHandl;
 // use modul::modul::Breakfast;
 // use varmut::varmut;
 // use collections::collections;
-use errHandl::err_handl;
+// use errHandl::err_handl;
+use genric::genr;
 fn main() {
     // ownership();
     // guess();
@@ -27,5 +29,6 @@ fn main() {
 
     // println!("{:#?}", summer_bf);
     // collections();
-    err_handl();
+    // err_handl();
+    genr();
 }
