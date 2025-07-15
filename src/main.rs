@@ -6,6 +6,8 @@ mod ownership;
 mod structs;
 mod errHandl;
 mod genric;
+mod traits;
+mod lifetimes;
 // use guess::guess;
 // use ownership::ownership;
 // use enums::enums;
@@ -14,7 +16,9 @@ mod genric;
 // use varmut::varmut;
 // use collections::collections;
 // use errHandl::err_handl;
-use genric::genr;
+// use genric::genr;
+// use traits::trat;
+use lifetimes::lifeti;
 fn main() {
     // ownership();
     // guess();
@@ -30,5 +34,9 @@ fn main() {
     // println!("{:#?}", summer_bf);
     // collections();
     // err_handl();
-    genr();
+    // genr();
+    // trat();
+    lifeti();
+    
+    
 }

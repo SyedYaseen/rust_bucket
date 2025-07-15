@@ -52,7 +52,7 @@ impl <T: Clone, U> Point<T, U> {
 // Support T with Clone trait, e.g. String (heap-allocated, not Copy).
 // This uses `self` instead of `&self`, meaning the method takes ownership of the whole struct.
 // Because `self` is owned (not a reference), we are allowed to move `x` out of it directly.
-// No need to clone here, even though T isn't Copy, because we own the value.
+// No need to clone here, even though T isn't Copy, because the method owns the value.
 // Any method trying to access the struct after passing to method will cause a compiler error
 // impl <T: Clone, U> Point<T, U> {
 //     fn mix<V, W>(self, pt: Point<V, W>) -> Point<T, W> {
