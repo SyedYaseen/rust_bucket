@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "bucket",
+    "bucket", "closures",
     "minigrep"
 ]
