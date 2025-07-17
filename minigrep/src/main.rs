@@ -2,9 +2,7 @@ use std::env;
 use std::process;
 use minigrep;
 
-fn main() {
-    let args: Vec<String> = env::args().collect();
-    
+fn main() {   
     // let config = match parse_args(&args) {
     //     Ok(c) => c,
     //     Err(e) => {
@@ -13,7 +11,7 @@ fn main() {
     //     }
     // };
 
-    let config = minigrep::parse_args(&args).unwrap_or_else(|e| {
+    let config = minigrep::parse_args(&mut env::args()).unwrap_or_else(|e| {
         println!("{}", e);
         process::exit(1)
     });
