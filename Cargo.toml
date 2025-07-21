@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "bucket", "closures", "iters",
+    "bucket", "closures", "concur", "iters",
     "minigrep"
 , "smrtpointers"]
