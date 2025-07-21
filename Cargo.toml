@@ -2,4 +2,4 @@
 members = [
     "bucket", "closures", "iters",
     "minigrep"
-]
+, "smrtpointers"]
