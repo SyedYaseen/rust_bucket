@@ -1,4 +1,9 @@
-use std::{os::unix::thread, sync::mpsc, thread::{sleep, spawn}, time::Duration};
+use std::{
+    os::unix::thread,
+    sync::{Arc, Mutex, mpsc},
+    thread::{JoinHandle, sleep, spawn},
+    time::Duration,
+};
 
 fn basics() {
     let th = spawn(|| {
@@ -17,21 +22,20 @@ fn basics() {
 }
 
 fn messages() {
-    
-    let m1 = vec! {
+    let m1 = vec![
         String::from("m1"),
         String::from("m2"),
         String::from("m3"),
         String::from("m4"),
-    };
+    ];
 
-    let m2 = vec! {
+    let m2 = vec![
         String::from("m11"),
         String::from("m22"),
         String::from("m33"),
         String::from("m44"),
         String::from("m55"),
-    };
+    ];
 
     let (tx, rx) = mpsc::channel();
     let tx2 = tx.clone(); // Must be cloned here else it will be consumed.
@@ -43,7 +47,6 @@ fn messages() {
         }
     });
 
-    
     let h2 = spawn(move || {
         for i in m2 {
             tx2.send(i).unwrap();
@@ -62,13 +65,41 @@ fn messages() {
     // for i in rx {
     //     println!("{i}");
     // }
+}
 
+fn mutx() {
+    // Basics
+    let m = Mutex::new(5);
+    let mut num: std::sync::MutexGuard<'_, i32> = m.lock().unwrap();
+    *num = 6;
+    println!("{:?}", m);
+}
 
+fn mutx_arc() {
+    // Spawn 10 threads that inc mutex value by 1
+    let m = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let m_arc = Arc::clone(&m);
+        let handle = spawn(move || {
+            let mut g = m_arc.lock().unwrap();
+            *g += 1;
+        });
+
+        handles.push(handle);
+    }
+
+    for h in handles {
+        h.join().unwrap();
+    }
+
+    println!("{:#?}", m);
 }
 
 fn main() {
     // basics();
-    messages();
-
-
+    // messages();
+    // mutx();
+    mutx_arc();
 }

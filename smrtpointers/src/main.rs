@@ -1,4 +1,9 @@
-use std::{cell::RefCell, fmt::Display, ops::Deref, rc::{Rc, Weak}};
+use std::{
+    cell::RefCell,
+    fmt::Display,
+    ops::Deref,
+    rc::{Rc, Weak},
+};
 
 // Box pointer
 #[derive(Debug)]
@@ -17,22 +22,21 @@ impl<T: Display> Drop for MyBox<T> {
     }
 }
 
-
 // Rc Pointer
 #[derive(Debug)]
 enum List {
     Cons(i32, Rc<List>),
     ConsRef(Rc<RefCell<i32>>, Rc<List>),
     Bx(i32, Box<List>),
-    Nil
+    Nil,
 }
-use crate::List::{Nil, Cons, Bx, ConsRef};
+use crate::List::{Bx, Cons, ConsRef, Nil};
 
 // Ref cycles and weak pointers
 struct Node {
     name: String,
     parent: RefCell<Weak<Node>>,
-    children: RefCell<Vec<Rc<Node>>>
+    children: RefCell<Vec<Rc<Node>>>,
 }
 
 impl Node {
@@ -40,27 +44,12 @@ impl Node {
         Node {
             name: name.to_string(),
             parent: RefCell::new(Weak::new()),
-            children: RefCell::new(vec![])
+            children: RefCell::new(vec![]),
         }
     }
 }
 
-
 fn main() {
-    //Weak pointers - move to end later
-    let parent = Rc::new(Node::new("new"));
-    let child = Rc::new(Node::new("child"));
-
-    parent.children.borrow_mut().push(Rc::clone(&child));
-    println!("After adding child");
-    println!("Parent Weak: {} Strong: {}", Rc::weak_count(&parent),  Rc::strong_count(&parent));
-    println!("Child Weak: {} Strong: {}", Rc::weak_count(&child),  Rc::strong_count(&child));
-
-    *child.parent.borrow_mut() = Rc::downgrade(&parent);
-    println!("After adding weak ref");
-    println!("Parent Weak: {} Strong: {}", Rc::weak_count(&parent),  Rc::strong_count(&parent));
-    println!("Child Weak: {} Strong: {}", Rc::weak_count(&child),  Rc::strong_count(&child));
-
     // Box pointer
     let nu = MyBox(5);
     let nu2 = &nu;
@@ -77,13 +66,13 @@ fn main() {
     // Rc Pointer
 
     // let a = Rc::new(
-    //     Cons(1, 
+    //     Cons(1,
     //         Rc::new(Cons(2, Rc::new(Nil)))));
 
-    let a = Rc::new( // As long the value was wrapped by Rc::new it works.
-        Bx(1, 
-            Box::new(Cons(2, Rc::new(Nil)))));
-
+    let a = Rc::new(
+        // As long the value was wrapped by Rc::new it works.
+        Bx(1, Box::new(Cons(2, Rc::new(Nil)))),
+    );
 
     let b = Cons(11, Rc::clone(&a));
     println!("Count of ref to a: {}", Rc::strong_count(&a));
@@ -95,22 +84,48 @@ fn main() {
     // println!("{:#?}", a);
     println!("Count of ref to a: {}", Rc::strong_count(&a));
 
-
     // Refcell Pointer
-    let value = Rc::new(RefCell::new(123)); 
+    let value = Rc::new(RefCell::new(123));
     // We wrap like this because rc doesnt let us pass a mut ref. But once we deref, we can get access to runtime mutable ref from refcell.
     // Else rc would want us to either clone(it wont be mut on same value) or it will move the value in which case we will lose the "value" ref that we currently have.
-    let aa =  Rc::new(ConsRef(Rc::clone(&value), Rc::new(Nil)));
-    
+    let aa = Rc::new(ConsRef(Rc::clone(&value), Rc::new(Nil)));
+
     let bb = Cons(111, Rc::clone(&aa));
     let cc = Cons(222, Rc::clone(&aa));
-    
+
     println!("Count of ref to aa: {}", Rc::strong_count(&aa));
 
-    
     println!("{:#?}", bb);
     *value.borrow_mut() = 25;
     println!("{:#?}", bb);
-    
-    
+
+    //Weak pointers - move to end later
+    let parent = Rc::new(Node::new("new"));
+    let child = Rc::new(Node::new("child"));
+
+    parent.children.borrow_mut().push(Rc::clone(&child));
+    println!("After adding child");
+    println!(
+        "Parent Weak: {} Strong: {}",
+        Rc::weak_count(&parent),
+        Rc::strong_count(&parent)
+    );
+    println!(
+        "Child Weak: {} Strong: {}",
+        Rc::weak_count(&child),
+        Rc::strong_count(&child)
+    );
+
+    *child.parent.borrow_mut() = Rc::downgrade(&parent);
+    println!("After adding weak ref");
+    println!(
+        "Parent Weak: {} Strong: {}",
+        Rc::weak_count(&parent),
+        Rc::strong_count(&parent)
+    );
+    println!(
+        "Child Weak: {} Strong: {}",
+        Rc::weak_count(&child),
+        Rc::strong_count(&child)
+    );
 }
