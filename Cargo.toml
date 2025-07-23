@@ -1,5 +1,5 @@
 [workspace]
-members = [ "asyncawait",
+members = [ "asyncawait", "axumtut",
     "bucket", "closures", "concur", "iters",
     "minigrep"
 , "smrtpointers"]
